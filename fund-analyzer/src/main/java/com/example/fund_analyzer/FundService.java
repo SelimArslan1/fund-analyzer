@@ -45,7 +45,7 @@ public class FundService {
                 fund.setDate(LocalDate.parse(row[0], java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                 fund.setCode(row[1]);
                 fund.setName(row[2]);
-                fund.setPrice(parseFloat(row[3]));
+                fund.setPrice(parseDouble(row[3]));
                 fund.setShareCount(parseLong(row[4]));
                 fund.setPeopleCount(parseInt(row[5]));
                 fund.setTotalPrice(parseDouble(row[6]));
@@ -66,10 +66,6 @@ public class FundService {
         String noThousands = s.replace(".", "");
         String integerPart = noThousands.split(",")[0];
         return Long.parseLong(integerPart);
-    }
-
-    private float parseFloat(String s) {
-        return Float.parseFloat(s.replace(".", "").replace(",", "."));
     }
 
     private double parseDouble(String s) {

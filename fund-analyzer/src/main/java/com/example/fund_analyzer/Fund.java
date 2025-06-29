@@ -13,7 +13,7 @@ public class Fund {
     private LocalDate date;
     private String code;
     private String name;
-    private float price;
+    private double price;
     private long shareCount;
     private int peopleCount;
     private double totalPrice;
@@ -35,7 +35,7 @@ public class Fund {
         return name;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -67,7 +67,7 @@ public class Fund {
         this.name = name;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
