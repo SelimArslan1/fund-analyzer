@@ -1,18 +1,17 @@
-# Stage 1: build the app
-FROM node:18-alpine as build-stage
+FROM node:20-alpine AS build-stage
 
 WORKDIR /app
 
 COPY package*.json ./
+
 RUN npm install
 
 COPY . .
+
 RUN npm run build
 
-# Stage 2: serve the app with a lightweight web server
-FROM nginx:alpine
+FROM nginx:stable-alpine AS production-stage
 
-# Copy built files from previous stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 EXPOSE 80

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -60,6 +61,11 @@ public class FundService {
     @Transactional
     public void clearDatabase() {
         fundRepository.deleteAll();
+    }
+
+    @Transactional
+    public List<Fund> getAll() {
+        return fundRepository.findAll();
     }
 
     private long parseLong(String s) {

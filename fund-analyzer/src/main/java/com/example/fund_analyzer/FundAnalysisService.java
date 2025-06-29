@@ -100,5 +100,10 @@ public class FundAnalysisService {
     public void clearDatabase() {
         fundStreakRepository.deleteAll();
     }
+
+    @Transactional
+    public List<FundStreak> getAll() {
+        return fundStreakRepository.findAll();
+    }
 }
 

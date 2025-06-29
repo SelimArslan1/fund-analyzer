@@ -10,4 +10,6 @@ import java.util.List;
 public interface FundRepository extends JpaRepository<Fund, Long> {
 
     List<Fund> findAllByOrderByCodeAscDateAsc();
+
+    List<Fund> findAll();
 }
