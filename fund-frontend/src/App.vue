@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="header">
-      <h1>Fund Analyzer</h1>
+      <h1>Fund Streak Analyzer</h1>
     </div>
 
     <div class="container">
@@ -159,52 +159,27 @@ export default {
       this.currentAction = 'filter';
 
       try {
-        const endpoints = [];
+        // Build query parameters
+        const params = new URLSearchParams();
+        if (this.filters.price) params.append('price', 'true');
+        if (this.filters.shareCount) params.append('shareCount', 'true');
+        if (this.filters.peopleCount) params.append('peopleCount', 'true');
+        if (this.filters.totalPrice) params.append('totalPrice', 'true');
 
-        if (this.filters.price) endpoints.push('price');
-        if (this.filters.shareCount) endpoints.push('shareCount');
-        if (this.filters.peopleCount) endpoints.push('peopleCount');
-        if (this.filters.totalPrice) endpoints.push('totalPrice');
+        const url = `http://localhost:8080/api/funds/metric?${params.toString()}`;
+        console.log('Fetching from:', url);
 
-        console.log('Endpoints to fetch:', endpoints);
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
 
-        // Fetch from each endpoint
-        const promises = endpoints.map(endpoint => {
-          const url = `http://localhost:8080/api/funds/${endpoint}`;
-          console.log('Fetching from:', url);
-          return fetch(url)
-            .then(response => {
-              console.log(`Response from ${endpoint}:`, response.status);
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log(`Data from ${endpoint}:`, data);
-              return data;
-            });
-        });
-
-        const results = await Promise.all(promises);
-        console.log('All results:', results);
-
-        // Find intersection - items that appear in ALL selected lists
-        if (results.length === 1) {
-          // If only one filter is selected, use those results directly
-          this.filteredResults = results[0];
-        } else {
-          // Find items that appear in all result sets
-          const intersection = results[0].filter(item => {
-            // Check if this item exists in all other result sets
-            return results.slice(1).every(resultSet =>
-              resultSet.some(otherItem => otherItem.id === item.id)
-            );
-          });
-
-          console.log('Intersection results:', intersection);
-          this.filteredResults = intersection;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const results = await response.json();
+        console.log('Filtered results:', results);
+
+        this.filteredResults = results;
 
       } catch (error) {
         console.error('Error fetching filtered results:', error);
