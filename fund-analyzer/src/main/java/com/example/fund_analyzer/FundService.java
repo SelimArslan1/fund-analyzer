@@ -35,6 +35,7 @@ public class FundService {
 
     @Transactional
     public void updateFunds(String csvPath) {
+        int count = 1;
         try (CSVReader csvReader = new CSVReader(new FileReader(csvPath))) {
             String[] headers = csvReader.readNext(); // read header line
 
@@ -51,6 +52,7 @@ public class FundService {
                 fund.setPeopleCount(parseInt(row[5]));
                 fund.setTotalPrice(parseDouble(row[6]));
 
+                System.out.println("Updated row " + count++);
                 fundRepository.save(fund);
             }
         } catch (IOException | CsvValidationException e) {
@@ -66,6 +68,10 @@ public class FundService {
     @Transactional
     public List<Fund> getAll() {
         return fundRepository.findAll();
+    }
+    @Transactional
+    public List<Fund> getByCode(String code) {
+        return fundRepository.findAllByCode(code);
     }
 
     private long parseLong(String s) {
